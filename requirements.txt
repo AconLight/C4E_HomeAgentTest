@@ -33,4 +33,4 @@ mypy>=1.4.0
 flake8>=6.0.0
 
 # Optional - Hedera Integration
-hedera-sdk-py>=2.19.0
+#hedera-sdk-py>=2.19.0
