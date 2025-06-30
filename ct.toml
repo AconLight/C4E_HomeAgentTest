@@ -1,0 +1,13 @@
+# Default configuration settings
+
+[simulation]
+timestep = 300  # 5 minutes
+duration = 86400  # 24 hours
+
+[strategy]
+optimization_target = "energy_efficiency"
+constraints = []
+
+[agent]
+temperature = 0.7
+max_tokens = 1000
