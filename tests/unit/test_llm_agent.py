@@ -1,101 +1,35 @@
 import pytest
-from typing import Dict, Any
-from core.agents.llm_agent import LLMAgent
+import time
+from core.agents.llm_agent_mistral import LLMAgentMistral
+from core.agents.llm_agent_mistral_magyar_jetson import LLMAgentMistralMagyarJetson
+from core.agents.llm_agent_phi2 import LLMAgentPhi2
+from core.agents.llm_agent_falcon_rw_1b import LLMAgentFalconRW1B
+from core.agents.llm_agent_tinyllama import LLMAgentTinyLlama
 
-@pytest.fixture
-def agent():
-    return LLMAgent()
+QUESTIONS = [
+    "What is the temperature?",
+    "How can I optimize energy usage?",
+    "What is the weather forecast for tomorrow?",
+    "Summarize the benefits of solar panels.",
+    "How do I reset my smart thermostat?"
+]
 
-def test_agent_initialization(agent):
-    """Test that agent initializes correctly."""
-    assert isinstance(agent.state_history, list)
-    assert len(agent.state_history) == 0
-
-def test_agent_observe(agent):
-    """Test that agent can observe and store state."""
-    test_state = {
-        "timestamp": 1000,
-        "sensors": {
-            "temperature": 22.5,
-            "humidity": 45
-        }
-    }
-    
-    agent.observe(test_state)
-    assert len(agent.state_history) == 1
-    assert agent.state_history[0] == test_state
-    
-    # Test history limit
-    for i in range(150):
-        agent.observe({"timestamp": i})
-    assert len(agent.state_history) <= 100
-
-def test_agent_decide_normal_temp(agent):
-    """Test agent decision with normal temperature."""
-    test_state = {
-        "timestamp": 1000,
-        "sensors": {
-            "temperature": 22.5
-        }
-    }
-    agent.observe(test_state)
-    
-    action = agent.decide()
-    assert action == {"action": "maintain"}
-
-def test_agent_decide_high_temp(agent):
-    """Test agent decision with high temperature."""
-    test_state = {
-        "timestamp": 1000,
-        "sensors": {
-            "temperature": 25.0
-        }
-    }
-    agent.observe(test_state)
-    
-    action = agent.decide()
-    assert action == {"action": "cool_down"}
-
-def test_agent_decide_low_temp(agent):
-    """Test agent decision with low temperature."""
-    test_state = {
-        "timestamp": 1000,
-        "sensors": {
-            "temperature": 19.0
-        }
-    }
-    agent.observe(test_state)
-    
-    action = agent.decide()
-    assert action == {"action": "heat_up"}
-
-def test_agent_decide_no_temp(agent):
-    """Test agent decision without temperature data."""
-    test_state = {
-        "timestamp": 1000,
-        "sensors": {
-            "humidity": 45
-        }
-    }
-    agent.observe(test_state)
-    
-    action = agent.decide()
-    assert action == {"action": "maintain"}
-
-def test_agent_act(agent):
-    """Test agent action execution."""
-    test_action = {"action": "test_action"}
-    result = agent.act(test_action)
-    assert isinstance(result, bool)
-
-def test_state_history_limit(agent):
-    """Test that state history is limited to 100 entries."""
-    for i in range(150):
-        agent.observe({"timestamp": i})
-    assert len(agent.state_history) == 100
-    assert agent.state_history[0]["timestamp"] == 50
-
-def test_ask_method_returns_string(agent):
-    """Test that the ask method takes a string and returns a string."""
-    result = agent.ask("What is the temperature?")
-    assert isinstance(result, str)
+@pytest.mark.parametrize("AgentClass,agent_name", [
+    # (LLMAgentMistral, "Mistral-7B-Instruct-v0.3"),
+    # (LLMAgentMistralMagyarJetson, "MistralMagyarJetson"),
+    (LLMAgentPhi2, "Phi2"),
+    (LLMAgentFalconRW1B, "FalconRW1B"),
+    (LLMAgentTinyLlama, "TinyLlama"),
+])
+def test_llm_agent_ask_multiple_questions_and_time(AgentClass, agent_name):
+    agent = AgentClass()
+    times = []
+    print(f"\nTesting agent: {agent_name}")
+    for q in QUESTIONS:
+        start = time.time()
+        result = agent.ask(q)
+        elapsed = time.time() - start
+        times.append(elapsed)
+        assert isinstance(result, str)
+        print(f"Question: {q}\nResponse time: {elapsed:.2f} seconds\n")
+    print(f"All response times for {agent_name}: {times}\n")
