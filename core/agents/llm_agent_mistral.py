@@ -25,6 +25,7 @@ class LLMAgentMistral(LLMAgent):
             device_map="auto",                # automatically places model on GPU/CPU
             use_auth_token=self.hf_token
         )
+        self.model.bfloat16()
         self.temperature = 1.0
     
     def ask(self, prompt: str) -> str:

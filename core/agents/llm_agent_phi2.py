@@ -18,6 +18,7 @@ class LLMAgentPhi2(LLMAgent):
             device_map="auto",
             use_auth_token=self.hf_token
         )
+        self.model.bfloat16()
         self.temperature = 1.0
 
     def ask(self, prompt: str) -> str:
