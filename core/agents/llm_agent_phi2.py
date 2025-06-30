@@ -18,7 +18,8 @@ class LLMAgentPhi2(LLMAgent):
             device_map="auto",
             use_auth_token=self.hf_token
         )
-        self.model.bfloat16()
+        self.temperature = 1.0
+
     def ask(self, prompt: str) -> str:
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
         with torch.no_grad():
@@ -26,7 +27,7 @@ class LLMAgentPhi2(LLMAgent):
                 **inputs,
                 max_new_tokens=128,
                 do_sample=True,
-                temperature=0.7
+                temperature=self.temperature
             )
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return response.strip()

@@ -25,6 +25,7 @@ class LLMAgentMistral(LLMAgent):
             device_map="auto",                # automatically places model on GPU/CPU
             use_auth_token=self.hf_token
         )
+        self.temperature = 1.0
     
     def ask(self, prompt: str) -> str:
         """Send prompt to Mistral model and return the generated output as a string."""
@@ -34,7 +35,7 @@ class LLMAgentMistral(LLMAgent):
                 **inputs,
                 max_new_tokens=128,
                 do_sample=True,
-                temperature=0.7
+                temperature=self.temperature
             )
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return response.strip()
