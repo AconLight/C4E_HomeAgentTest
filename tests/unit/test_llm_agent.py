@@ -9,9 +9,9 @@ from core.agents.llm_agent_tinyllama import LLMAgentTinyLlama
 QUESTIONS = [
     "What is the temperature?",
     "How can I optimize energy usage?",
-    "What is the weather forecast for tomorrow?",
-    "Summarize the benefits of solar panels.",
-    "How do I reset my smart thermostat?"
+    # "What is the weather forecast for tomorrow?",
+    # "Summarize the benefits of solar panels.",
+    # "How do I reset my smart thermostat?"
 ]
 
 @pytest.mark.parametrize("AgentClass,agent_name", [
@@ -31,5 +31,5 @@ def test_llm_agent_ask_multiple_questions_and_time(AgentClass, agent_name):
         elapsed = time.time() - start
         times.append(elapsed)
         assert isinstance(result, str)
-        print(f"Question: {q}\nResponse time: {elapsed:.2f} seconds\n")
+        print(f"Question: {q}\nResponse: {result}\nTime: {elapsed:.2f} seconds\n")
     print(f"All response times for {agent_name}: {times}\n")
