@@ -27,6 +27,7 @@ class LLMAgentMistral(LLMAgent):
         )
         self.model.bfloat16()
         self.temperature = 1.0
+        print(f"Model loaded on device: {self.model.device}")
     
     def ask(self, prompt: str) -> str:
         """Send prompt to Mistral model and return the generated output as a string."""

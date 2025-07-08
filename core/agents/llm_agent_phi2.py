@@ -20,6 +20,7 @@ class LLMAgentPhi2(LLMAgent):
         )
         self.model.bfloat16()
         self.temperature = 1.0
+        print(f"Model loaded on device: {self.model.device}")
 
     def ask(self, prompt: str) -> str:
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.model.device)
