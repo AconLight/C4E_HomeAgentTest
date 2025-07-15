@@ -50,18 +50,8 @@ class Agent(ABC):
     """Base interface for all agents in the system."""
     
     @abstractmethod
-    def observe(self, state: Dict[str, DeviceData]) -> None:
-        """Process new observation."""
-        pass
-    
-    @abstractmethod
-    def decide(self) -> Dict[str, Any]:
-        """Make a decision based on current state."""
-        pass
-    
-    @abstractmethod
-    def act(self, action: Dict[str, Any]) -> bool:
-        """Execute an action."""
+    def ask(self, prompt: str) -> str:
+        """Ask agent."""
         pass
 
 class Strategy(ABC):

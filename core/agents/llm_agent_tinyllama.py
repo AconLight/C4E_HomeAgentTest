@@ -19,7 +19,7 @@ class LLMAgentTinyLlama(LLMAgent):
             use_auth_token=self.hf_token
         )
         self.model.bfloat16()
-        self.temperature = 1.0
+        self.temperature = 1
         print(f"Model loaded on device: {self.model.device}")
 
     def ask(self, prompt: str) -> str:
