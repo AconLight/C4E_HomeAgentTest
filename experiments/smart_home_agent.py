@@ -10,43 +10,32 @@ def read_sensor_data():
 # --- Prompt that forces a quick classification ---
 def create_sensor_classification_prompt(command):
     return f"""
-You are a smart home agent. Your job is to classify questions about environmental sensor data.
-
 Rules:
-- Return 1 if the question is about temperature
-- Return 2 if the question is about humidity
-- Return 3 if the question is about pressure
-- Return 0 if the question is unrelated
-
-Examples:
+- Return 1 - temperature if the question is about temperature
+- Return 2 - humidity if the question is about humidity
+- Return 3 - pressure if the question is about pressure
+- Return 0 - other if the question is unrelated
 Q: What is the pressure?
-A: 3
-
+A: 3 - pressure
 Q: What is the humidity?
-A: 2
-
+A: 2 - humidity
 Q: What is the temperature?
-A: 1
-
+A: 1 - temperature
+Q: gfdagagfas?
+A: 0 - other
 Q: What is the humidity?
-A: 2
-
+A: 2 - humidity
 Q: What is the current temperature?
-A: 1
-
+A: 1 - temperature
 Q: What is the pressure?
-A: 3
-
+A: 3 - pressure
 Q: How hot is today?
-A: 1
-
+A: 1 - temperature
+Q: What is your name?
+A: 0 - other
 Q: What is the humidity?
-A: 2
-
-Q: I like pancakes.
-A: 0
-
-Now classify this question:
+A: 2 - humidity
+FINAL Q&A
 Q: {command}
 A:"""
 
@@ -76,8 +65,8 @@ def test_smart_home_agent(AgentClass, agent_name):
         result = agent.ask(classification_prompt)
 
         # Try to extract the classification digit from the response
-        classification = ''.join([c for c in result if c in '0123'])[:1]
-
+        classification = result[len(classification_prompt)]
+        print(result[len(classification_prompt)-8:len(classification_prompt)+3])
         print(f"[debug] classification: {classification}")
 
         # Step 2: decide what to respond with
